@@ -17,7 +17,7 @@ install_requires = [
     'pycryptodomex>=3.7.0',
     'requests>=2.9.1',
     'urllib3<2', # See https://github.com/kevin1024/vcrpy/pull/699#issuecomment-1551439663
-    'vdf @ git+https://github.com/solsticegamestudios/vdf.git@v4.0',
+    'vdf @ git+https://github.com/OreQr/vdf.git@v4.0',
     'cachetools>=3.0.0',
 ]
 
