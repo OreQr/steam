@@ -233,9 +233,7 @@ class WebsocketConnection(Connection):
                     return
                 
                 logger.debug("Received {} bytes".format(len(data)))
-                self._readbuf += data
-                self.ws.receive_data(self._readbuf)
-                self._readbuf = b''
+                self.ws.receive_data(data)
                 self._handle_events()
     
     def _handle_events(self):
@@ -249,7 +247,11 @@ class WebsocketConnection(Connection):
                logger.debug("Received websocket text message of length: {}".format(len(event.data)))
             elif isinstance(event, wsevents.BytesMessage):
                 logger.debug("Received websocket bytes message of length: {}".format(len(event.data)))
-                self.recv_queue.put(event.data)
+                self._readbuf += event.data
+                if event.message_finished:
+                    self.recv_queue.put(self._readbuf)
+                    self._readbuf = b''
+                    
             elif isinstance(event, wsevents.Pong):
                 logger.debug("Received pong: {}".format(repr(event.payload)))
             elif isinstance(event, wsevents.CloseConnection):
